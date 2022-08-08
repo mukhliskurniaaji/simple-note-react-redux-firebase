@@ -2,37 +2,33 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Button from '../../../components/atoms/Button';
 import { loginUserAPI } from '../../../config/redux/action';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
+function Login (props) {
+  let navigate = useNavigate();
 
-class Login extends Component {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-  state = {
-    email : "",
-    password : '',
+  const handleChangeEmail=(e)=>{
+    setEmail(e.target.value);
   }
 
-  handleChangeText=(e)=>{
-    this.setState({
-      [e.target.id] : e.target.value,
-    })
+  const handleChangePassword=(e)=>{
+    setPassword(e.target.value);
   }
 
   // menangani data promis yg dikirim ari server
-  handleLoginSubmit =()=>{
-    const email = this.state.email;
-    const password = this.state.password;
-    const {history} = (this.props)
-    console.log(history) 
-
-    this.props.loginAPI({email: email, password:password})
+  const handleLoginSubmit =()=>{
+    
+    props.loginAPI({email: email, password:password})
       .then ((response)=>{
         console.log('LOGIN BERHASIL')
-        this.setState({
-          email:'',
-          password:''
-        })
+        setEmail('');
+        setPassword('');
         console.log('Sebelum dipush')
-             
+             navigate('/')
         console.log('Setelah dipush')
       })
       .catch(function (error) {
@@ -44,7 +40,7 @@ class Login extends Component {
   }    
   
 
-  render() {
+  
     return (
       <div>
         <div>
@@ -53,22 +49,22 @@ class Login extends Component {
               id='email' 
               placeholder='Email' 
               type='text' 
-              value={this.state.email}
-              onChange={this.handleChangeText} />
+              value={email}
+              onChange={handleChangeEmail} />
           <input 
               id='password' 
               placeholder='Password' 
               type='password' 
-              value={this.state.password}
-              onChange={this.handleChangeText} />
+              value={password}
+              onChange={handleChangePassword} />
           <Button 
-              onClick={this.handleLoginSubmit} 
+              onClick={handleLoginSubmit} 
               title="Login" 
-              loading={this.props.isLoading}/>
+              loading={props.isLoading}/>
         </div>
       </div>
     )
-  }
+  
 }
 
 const reduxState = (state)=>({
@@ -81,19 +77,3 @@ const reduxDispach=(dispatch)=>({
 
 export default connect(reduxState, reduxDispach)(Login) ;
 
-// untuk menggunakan store dari global (App), kita gunakan connect :
-// pada state global, state mempunyai 2, yaitu popun dan isLogin
-/*
-const reduxState=(state)=>({ //state ini dari global (di App)
-  popupProps : state.popup, 
-  userName : state.user,
-})
-
-const reduxDispatch=(dispatch)=>({
-  changeUserName: () => dispatch(actionUserName()) //dispatch tidak bisa asyc
-})
-
-export default connect(reduxState, reduxDispatch)(Login) ;
-*/
-// connect(reduxState, null), reduxState berarti state dari global,
-// sedangkan reduxDispach nya nanti diisi dispach/aksi
