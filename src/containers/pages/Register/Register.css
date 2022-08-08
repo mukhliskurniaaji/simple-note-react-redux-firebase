@@ -1,0 +1,12 @@
+.auth-container {
+    display: flix;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+}
+.auth-card {
+    border: 1px solid #bfbfbf;
+    padding : 16px;
+    border-radius :10px
+}
